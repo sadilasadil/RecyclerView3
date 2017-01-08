@@ -1,5 +1,7 @@
 package id.sch.smktelkom_mlg.learn.recyclerview3.adapter;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +18,13 @@ import id.sch.smktelkom_mlg.learn.recyclerview3.model.Hotel;
  * Created by Salsadila on 05/11/2016.
  */
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> {
+
+    IHotelAdapter mIHotelAdapter;
     ArrayList<Hotel> hotelList;
 
-    public HotelAdapter(ArrayList<Hotel> hotelList) {
+    public HotelAdapter(Context context, ArrayList<Hotel> hotelList) {
         this.hotelList = hotelList;
+        mIHotelAdapter = (IHotelAdapter) context;
     }
 
     @Override
@@ -34,8 +39,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         Hotel hotel = hotelList.get(position);
         holder.tvJudul.setText(hotel.judul);
         holder.tvDeskripsi.setText(hotel.deskripsi);
-        holder.ivFoto.setImageDrawable(hotel.foto);
-
+        holder.ivFoto.setImageURI(Uri.parse(String.valueOf(hotel.foto)));
     }
 
     @Override
@@ -43,6 +47,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         if (hotelList != null)
             return hotelList.size();
         return 0;
+    }
+
+    public interface IHotelAdapter {
+        void coClick(int pos);
+
+        void doClick(int adapterPosition);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,6 +65,16 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             ivFoto = (ImageView) itemView.findViewById(R.id.imageView);
             tvJudul = (TextView) itemView.findViewById(R.id.textViewJudul);
             tvDeskripsi = (TextView) itemView.findViewById(R.id.textViewDeskripsi);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mIHotelAdapter.doClick(getAdapterPosition());
+                }
+            });
+
+
         }
+
     }
 }
